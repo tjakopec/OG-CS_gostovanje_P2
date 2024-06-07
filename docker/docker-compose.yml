@@ -1,0 +1,27 @@
+version: "3.9"
+name: crud-postgres
+services:
+  db:
+    container_name: db
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: cars
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432:5432"
+  spring-boot:
+    image: spring-boot-postgres:latest
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/garages
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: secret
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+    ports:
+      - "18080:8080"
+      # Debug port
+      - "15005:5005"
+
